@@ -3,18 +3,27 @@ package de.lfuhr.nfcdoorapp;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import de.lfuhr.nfcdoorapp.connectivity.Server;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +49,37 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        doHttp();
     }
+
+    private void doHttp() {
+
+
+/*        Server server = Server.Companion.getInstance();
+
+
+        // Server server = Server.INSTANCE.getSomeServer();
+        final TextView textView = (TextView) findViewById(R.id.text_feld);
+
+
+        Response.Listener responseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                textView.setText(response.toString());
+            }
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                textView.setText("Ein Fehler: " + error.toString());
+            }
+        };
+
+        server.doHttp("/doors", responseListener, errorListener, this);*/
+    }
+
 
     @Override
     public void onBackPressed() {
