@@ -1,18 +1,21 @@
-package de.lfuhr.nfcdoorapp.fragments
+package layout
 
 import android.content.Context
+import android.databinding.DataBindingUtil
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import de.lfuhr.nfcdoorapp.beans.Door
 
+import de.lfuhr.nfcdoorapp.Example
 import de.lfuhr.nfcdoorapp.R
-import android.databinding.DataBindingUtil
-import de.lfuhr.nfcdoorapp.MainActivity
-
+import de.lfuhr.nfcdoorapp.Server
+import de.lfuhr.nfcdoorapp.databinding.FragmentDoorBinding
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 /**
  * A simple [Fragment] subclass.
@@ -25,25 +28,29 @@ import de.lfuhr.nfcdoorapp.MainActivity
 class DoorFragment : Fragment() {
 
     // TODO: Rename and change types of parameters
-    private var mParam1: String? = null
-    private var mParam2: String? = null
+    private var doorId: String? = null
 
     private var mListener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            mParam1 = arguments.getString(ARG_PARAM1)
-            mParam2 = arguments.getString(ARG_PARAM2)
+            doorId = arguments.getString(doorId)
         }
-        val binding: FragmentDoorBinding = DataBindingUtil.setContentView(activity, R.layout.fragment_door)
-        val user = Door("Haustür", "Blah", "")
-        binding.setUser(user)
+
+        val binding = DataBindingUtil.setContentView<FragmentDoorBinding>(activity, R.layout.fragment_door)
+        val call = Server.getService().getDoor("1")
+        call.enqueue(object : Callback<Example> {
+            override fun onResponse(call: Call<Example>, response: Response<Example>) {
+                binding.door2 = response.body().door
+            }
+
+            override fun onFailure(call: Call<Example>, t: Throwable) {}
+        })
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         return inflater!!.inflate(R.layout.fragment_door, container, false)
     }
 
@@ -83,25 +90,19 @@ class DoorFragment : Fragment() {
     }
 
     companion object {
-        // TODO: Rename parameter arguments, choose names that match
-        // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-        private val ARG_PARAM1 = "param1"
-        private val ARG_PARAM2 = "param2"
+        private val ARG_PARAM1 = "doorId"
 
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
          *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
+         * @param doorId Parameter 1.
          * @return A new instance of fragment DoorFragment.
          */
-        // TODO: Rename and change types and number of parameters
-        fun newInstance(param1: String, param2: String): DoorFragment {
+        fun newInstance(doorId: String): DoorFragment {
             val fragment = DoorFragment()
             val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
+            args.putString(ARG_PARAM1, doorId)
             fragment.arguments = args
             return fragment
         }

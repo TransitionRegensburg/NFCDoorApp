@@ -1,18 +1,19 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
-        <variable name="user" type="de.lfuhr.nfcdoorapp.beans.Door"/>
+        <variable name="door2" type="de.lfuhr.nfcdoorapp.data.Door"/>
     </data>
 
     <FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="de.lfuhr.nfcdoorapp.fragments.DoorFragment">
-
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@{user.name}" />
+        tools:context="layout.DoorFragment">
 
-</FrameLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{door2.name}" />
+
+    </FrameLayout>
 </layout>
