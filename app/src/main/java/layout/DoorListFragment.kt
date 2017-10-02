@@ -1,102 +1,60 @@
 package layout
 
-import android.content.Context
-import android.net.Uri
+import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import de.lfuhr.nfcdoorapp.InteractingFragment
 
 import de.lfuhr.nfcdoorapp.R
+import de.lfuhr.nfcdoorapp.network.SafeCallback
+import de.lfuhr.nfcdoorapp.network.Server
+import de.lfuhr.nfcdoorapp.data_model.Door
+import de.lfuhr.nfcdoorapp.data_model.DoorsWrapper
+import de.lfuhr.nfcdoorapp.databinding.FragmentListBinding
+import retrofit2.Call
+import retrofit2.Response
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [DoorListFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [DoorListFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class DoorListFragment : Fragment() {
+class DoorListFragment : InteractingFragment() {
 
-    // TODO: Rename and change types of parameters
-    private var mParam1: String? = null
-    private var mParam2: String? = null
+    private var doors: List<Door>? = null
 
-    private var mListener: OnFragmentInteractionListener? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (arguments != null) {
-            mParam1 = arguments.getString(ARG_PARAM1)
-            mParam2 = arguments.getString(ARG_PARAM2)
-        }
-    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater!!.inflate(R.layout.fragment_door_list, container, false)
-    }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        if (mListener != null) {
-            mListener!!.onFragmentInteraction(uri)
+        activity.title = context.resources.getString(R.string.doors)
+
+        val binding: FragmentListBinding = DataBindingUtil.inflate(inflater,
+                R.layout.fragment_list, container, false)
+
+        val call = Server.getService().getDoors()
+        call.enqueue(object : SafeCallback<DoorsWrapper>(context) {
+            override fun onSafeResponse(call: Call<DoorsWrapper>, response: Response<DoorsWrapper>) {
+                val receivedDoors = response.body().doors!!
+                doors = receivedDoors
+                val doornames: MutableList<String> = ArrayList()
+                for (door in receivedDoors) {
+                    doornames.add(door.name!!)
+                }
+                binding.list.adapter = ArrayAdapter<String>(
+                        context,
+                        R.layout.door_list_item,
+                        R.id.door_list_item,
+                        doornames );
+            }
+        })
+
+        binding.list.setOnItemClickListener(AdapterView.OnItemClickListener {
+            adapterView, view, i, l -> activity!!.switchFragment(DoorFragment(doors!![i])) });
+
+        // http://tips.androidgig.com/android-databinding-with-fragment/
+        return binding.getRoot()
+
+        class DoorList {
         }
     }
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            mListener = context
-        } else {
-            throw RuntimeException(context!!.toString() + " must implement OnFragmentInteractionListener")
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        mListener = null
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
-     */
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
-    }
-
-    companion object {
-        // TODO: Rename parameter arguments, choose names that match
-        // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-        private val ARG_PARAM1 = "param1"
-        private val ARG_PARAM2 = "param2"
-
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment DoorListFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        fun newInstance(param1: String, param2: String): DoorListFragment {
-            val fragment = DoorListFragment()
-            val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
-            fragment.arguments = args
-            return fragment
-        }
-    }
-}// Required empty public constructor
+}

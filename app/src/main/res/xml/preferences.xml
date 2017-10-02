@@ -1,0 +1,20 @@
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/server_prefs">
+
+        <EditTextPreference
+            android:key="url"
+            android:title="@string/url"
+            android:summary="Vom Server"
+            android:dialogTitle="Endet auf api/" />
+
+        <EditTextPreference
+            android:key="bearer"
+            android:title="@string/bearer"
+            android:dialogTitle="" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
