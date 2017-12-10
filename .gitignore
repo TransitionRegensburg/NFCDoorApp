@@ -7,4 +7,4 @@
 /build
 /captures
 .externalNativeBuild
-*/server.xml
+server.xml

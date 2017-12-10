@@ -13,9 +13,8 @@ abstract class InteractingFragment: Fragment(), InteractingFragmentDecorator {
 
     lateinit var activity: FragmentInteractionListener
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         activity = context as FragmentInteractionListener
     }
 }
-interface InteractingFragmentDecorator

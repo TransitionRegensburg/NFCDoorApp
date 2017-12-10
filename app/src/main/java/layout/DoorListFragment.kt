@@ -1,5 +1,6 @@
 package layout
 
+import android.app.Activity
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -31,7 +32,7 @@ class DoorListFragment : InteractingFragment() {
         val binding: FragmentListBinding = DataBindingUtil.inflate(inflater,
                 R.layout.fragment_list, container, false)
 
-        val call = Server.getService().getDoors()
+        val call = Server.getService(activity as Activity).getDoors()
         call.enqueue(object : SafeCallback<DoorsWrapper>(context) {
             override fun onSafeResponse(call: Call<DoorsWrapper>, response: Response<DoorsWrapper>) {
                 val receivedDoors = response.body().doors!!

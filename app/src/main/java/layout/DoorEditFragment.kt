@@ -1,5 +1,6 @@
 package layout
 
+import android.app.Activity
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -35,7 +36,7 @@ class DoorEditFragment(val door: Door) : InteractingFragment() {
     }
 
     private fun save() {
-        val call = Server.getService().updateDoor(door, door.id!!)
+        val call = Server.getService(activity as Activity).updateDoor(door, door.id!!)
         call.enqueue(object : SafeCallback<DoorWrapper>(context) {
             override fun onSafeResponse(call: Call<DoorWrapper>, response: Response<DoorWrapper>) {
                 activity!!.popFragment()

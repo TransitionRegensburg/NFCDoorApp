@@ -4,15 +4,13 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import de.lfuhr.nfcdoorapp.databinding.ActivityMainBinding
 import layout.DoorListFragment
 import layout.PrefsFragment
-import android.preference.PreferenceManager
-import android.content.SharedPreferences
-
+import android.accounts.AccountManager
+import android.os.Handler
 
 
 class MainActivity : AppCompatActivity(), FragmentInteractionListener {
@@ -39,6 +37,17 @@ class MainActivity : AppCompatActivity(), FragmentInteractionListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val am = AccountManager.get(this)
+        val options = Bundle()
+
+        /*am.getAuthToken(
+                "", // Account retrieved using getAccountsByType()
+                "Manage your tasks", // Auth scope
+                options, // Authenticator-specific options
+                this, // Your activity
+                OnTokenAcquired(), // Callback called when a token is successfully acquired
+                Handler(OnError()))    // Callback called if an error occurs*/
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         setSupportActionBar(binding.myToolbar)
 
@@ -46,6 +55,14 @@ class MainActivity : AppCompatActivity(), FragmentInteractionListener {
         supportFragmentManager.beginTransaction()
                 .add(R.id.fragment_holder, fragment)
                 .commit()
+    }
+
+    class OnError {
+
+    }
+
+    class OnTokenAcquired {
+
     }
 
 

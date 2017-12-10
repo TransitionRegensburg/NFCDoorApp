@@ -10,4 +10,6 @@
     <string name="bearer">Bearer Token</string>
     <string name="url">Url</string>
     <string name="server_prefs">Server Einstellungen</string>
+    <string name="account_type">NFC Door System</string>
+    <string name="one_account_allowed">Nur Ein Account erlaubt</string>
 </resources>
